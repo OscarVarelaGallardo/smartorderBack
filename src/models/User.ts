@@ -1,17 +1,41 @@
-import { Schema, model, Document } from 'mongoose';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/db";
+import { Role } from "./Role";
 
-export interface IUser extends Document {
-    name: string;
-    email: string;
-    password: string;
-    createdAt: Date;
-}
+export const User = sequelize.define('user',{
+    id: {
+           type: DataTypes.INTEGER,
+           autoIncrement: true,
+           primaryKey: true,
+       },
+    email:{
+        type: DataTypes.STRING,
+        allowNull:false,
+        unique:true
+    },
+    password:{
+        type:DataTypes.STRING,
+        allowNull:false,
+        
+        
+    }},
+    {
+        tableName:'users',
+        timestamps:true
+    }
+    
+)
 
-const UserSchema = new Schema<IUser>({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+//
+//Relaction whith Role
+User.hasOne(Role, {
+    foreignKey: 'userId',       
+    as: 'role',                 
+    onDelete: 'CASCADE', 
+          
 });
 
-export default model<IUser>('User', UserSchema);
+Role.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user',
+});

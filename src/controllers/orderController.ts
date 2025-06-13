@@ -71,6 +71,7 @@ export const createOrder = async (req: Request, res: Response): Promise<any> => 
             return res.status(500).json({ message: 'Order creation failed' });
         }
         const { id: orderId } = newOrder.dataValues;
+        
         if (!orderId) {
             return res.status(500).json({ message: 'Order creation failed' });
         }

@@ -11,7 +11,7 @@ SmartOrder is a Node.js application designed to streamline and optimize order ma
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/smartorder.git
+git clone https://github.com/oscar_varela_gallardo/smartorder.git
 cd smartorder
 npm install
 ```
