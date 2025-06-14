@@ -1,8 +1,13 @@
 import {Router} from "express";
 
 import {
-    createShop
+    createShop, getAllShop
 } from '../controllers/shopController'
+
 const router = Router();
 
-router.post('/',createShop)
+router.post('/', createShop)
+
+router.get('/', getAllShop)
+
+export default router

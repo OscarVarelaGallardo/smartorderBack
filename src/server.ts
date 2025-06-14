@@ -41,7 +41,7 @@ app.use('/api', router);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.sync({ force:false }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
     console.log('Database is synchronized');
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);

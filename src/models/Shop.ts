@@ -24,9 +24,13 @@ export const Shop = sequelize.define('Shop', {
         type: DataTypes.DECIMAL(10, 7), // Ej: -99.133209
         allowNull: false,
     },
+    isActive:{
+        type:DataTypes.BOOLEAN,
+        defaultValue: true
+    },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'users',
             key: 'id',

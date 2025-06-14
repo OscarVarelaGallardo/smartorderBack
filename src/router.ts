@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import productRoutes from './route/productRouter';
 import orderRoutes from './route/orderRouter';
 import categoryRouter from "./route/categoryRouter";
-
+import shopRouter from './route/shopRouter'
+import userRouter from "./route/userRouter";
 
 const router = Router();
 
@@ -14,6 +15,10 @@ router.use('/order', orderRoutes);
 
 // Importar las rutas de las categorias
 router.use('/category' ,categoryRouter);
+
+router.use('/shop', shopRouter)
+
+router.use('/user', userRouter)
 
 // Ruta de prueba
 router.get('/', (req: Request, res: Response) => {
