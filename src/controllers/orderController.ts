@@ -7,6 +7,9 @@ import {
 import { OrderItem } from '../models/OrderItem';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';
+import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
 
 export const getAllOrders = async (req: Request, res: Response): Promise<any> => {
     const parseResult = GetAllOrderQuerySchema.safeParse(req.query);
@@ -160,14 +163,22 @@ export const getOrderById = async (req: Request, res: Response): Promise<any> =>
 }
 export const getOrdersByTable = async (req: Request, res: Response): Promise<any> => {
     const { numberTable } = req.params;
+    console.log(numberTable)
 
     try {
         const orders = await Order.findAll({
-            where: { numberTable },
-            include: [{
-                model: OrderItem,
-                include: [Product]
-            }]
+            where: { numberTable: numberTable },
+            include: [
+                {
+                    model: OrderItem,
+                    as: 'items',
+                    include: [
+                        {
+                            model: Product,
+                        }
+                    ]
+                }
+            ]
         });
         if (orders.length === 0) {
             return res.status(404).json({ message: 'No orders found for this table' });
@@ -180,19 +191,26 @@ export const getOrdersByTable = async (req: Request, res: Response): Promise<any
 }
 export const getOrdersByStatus = async (req: Request, res: Response): Promise<any> => {
     const { status } = req.params;
-
+    const parseStatus = status.toUpperCase()
     try {
         const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
-        if (!validStatuses.includes(status)) {
+        if (!validStatuses.includes(parseStatus)) {
             return res.status(400).json({ message: 'Invalid status' });
         }
 
         const orders = await Order.findAll({
-            where: { status },
-            include: [{
-                model: OrderItem,
-                include: [Product]
-            }]
+            where: { status: parseStatus },
+            include: [
+                {
+                    model: OrderItem,
+                    as: 'items',
+                    include: [
+                        {
+                            model: Product,
+                        }
+                    ]
+                }
+            ]
         });
 
         if (orders.length === 0) {
@@ -204,30 +222,45 @@ export const getOrdersByStatus = async (req: Request, res: Response): Promise<an
         return res.status(500).json({ message: 'Error fetching orders by status' });
     }
 }
+
+dayjs.extend(customParseFormat);
 export const getOrdersByDate = async (req: Request, res: Response): Promise<any> => {
-    const { date } = req.params;
+    const { date } = req.body;
 
     try {
+        const parsed = dayjs(date, "DD-MM-YYYY");
+        if (!parsed.isValid()) {
+            return res.status(400).json({ message: "Fecha inválida. Usa el formato DD-MM-YYYY." });
+        }
+
+        const startOfDay = parsed.startOf('day').toDate();
+        const endOfDay = parsed.endOf('day').toDate();
+        console.log("Start:", startOfDay.toISOString());
+        console.log("End:", endOfDay.toISOString());
         const orders = await Order.findAll({
             where: {
                 createdAt: {
-                    [Op.gte]: new Date(date),
-                    [Op.lt]: new Date(new Date(date).setDate(new Date(date).getDate() + 1))
+                    [Op.between]: [startOfDay, endOfDay]
                 }
             },
-            include: [{
-                model: OrderItem,
-                include: [Product]
-            }]
+            include: [
+                {
+                    model: OrderItem,
+                    as: 'items',
+                    include: [
+                        {
+                            model: Product,
+                            attributes: ['id', 'name', 'price']
+                        }
+                    ]
+                }
+            ]
         });
 
-        if (orders.length === 0) {
-            return res.status(404).json({ message: 'No orders found for this date' });
-        }
         return res.status(200).json(orders);
     } catch (error) {
-        console.error('Error fetching orders by date:', error);
-        return res.status(500).json({ message: 'Error fetching orders by date' });
+        console.error("Error al obtener órdenes:", error);
+        return res.status(500).json({ message: "Error al obtener órdenes" });
     }
-}
+};
 
