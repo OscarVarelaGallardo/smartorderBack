@@ -33,6 +33,27 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
+export const updateUser = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    const {userUpdate} = req.body
+    if (!id) return res.status(400).json({message: 'Id is required.'})
+    try {
+        const user = await User.findByPk(id)
+        if (user) {
+            await user.update(userUpdate)
+            return res.status(201).json({message: 'User update successfully'});
+
+        } else {
+            return res.status(500).json({message: 'Sometime wrong updating user'});
+
+        }
+    } catch (error) {
+        return res.status(500).json({message: 'Error on server  to created  user.', error});
+
+    }
+
+}
+
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
     const {id} = req.params;
     if (!id) {
