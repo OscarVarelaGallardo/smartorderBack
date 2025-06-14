@@ -37,7 +37,7 @@ export const Product = sequelize.define('Product', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'categories', // nombre de la tabla referida
+            model: 'categories',
             key: 'id'
         }
     }

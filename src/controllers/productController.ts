@@ -9,6 +9,7 @@ import { CreateProductSchema,
      UpdateProductDto,
      DeleteProductParams
     } from '../dtos/ProductDTO';
+import {Category} from "../models/Category";
 
 
 export const getAllProducts = async (req: Request, res: Response):Promise<any> => {
@@ -55,15 +56,17 @@ export const createProduct = async (req: Request, res: Response): Promise<any> =
         return res.status(400).json({ errors: parseResult.error.errors });
     }
     const productData = parseResult.data;
+
     try {
         await Product.create(productData);
-        return res.status(201).json({message: 'Producto creado exitosamente' });
+        return res.status(201).json({message: 'Product created successful' });
     } catch (error) {
-        res.status(400).json({ message: 'Error al crear producto' });
+        res.status(400).json({ message: 'Error to created a product' });
     }
 };
 
 export const updateProduct = async (req: Request, res: Response): Promise<any> => {
+
     const parseResult = UpdateProductSchema.safeParse(req.body);
     if (!parseResult.success) {
         return res.status(400).json({ errors: parseResult.error.errors });
@@ -80,9 +83,10 @@ export const updateProduct = async (req: Request, res: Response): Promise<any> =
 
     try {
         const product = await Product.findByPk(Number(params.id));
-        if (!product) return res.status(404).json({ message: 'Producto no encontrado' });
+        if (!product) return res.status(404).json({ message: 'Product dont find' });
+        const validateCategory = await Category.findByPk(updateData.categoryId)
+        if(!validateCategory)return res.status(404).json({message:'Category id dont find'})
         await product.update(updateData);
-      
         return res.status(200).json(product);
     } catch (error) {
         res.status(400).json({ message: 'Error al actualizar producto' });
