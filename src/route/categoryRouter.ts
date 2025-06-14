@@ -2,7 +2,8 @@ import {Router} from 'express'
 import {
     createCategory, deleteCategory,
     getAllCategory,
-    updateCategory
+    updateCategory,
+    findCategoryById
 } from "../controllers/categoryController";
 
 
@@ -12,6 +13,7 @@ router.get('/', getAllCategory)
 router.post('/', createCategory)
 router.patch('/:id', updateCategory)
 router.delete('/:id', deleteCategory)
+router.get('/:id',findCategoryById)
 
 
 export default router;

@@ -86,3 +86,22 @@ export const deleteCategory = async (req: Request, res: Response):Promise<any> =
     }
 
 }
+
+export const findCategoryById = async (req:Request, res:Response):Promise<any> =>{
+    const { id } = req.params;
+    if (!id || typeof id !== 'string') return res.status(400).json({message: "Id is required and must be a string"})
+    try {
+        const category = await Category.findByPk(id)
+
+        if (!category) {
+            return res.status(404).json({message: "Category ID not found"});
+        }
+
+        return res.status(201).json({
+            message: "Category find successfully",
+            category
+        });
+    } catch (error) {
+        console.log(error)
+    }
+}
