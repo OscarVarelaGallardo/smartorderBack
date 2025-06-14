@@ -4,6 +4,7 @@
   "description": "node express ts ",
   "main": "index.js",
   "scripts": {
+    "seed:roles": "ts-node src/seeders/seedRoles.ts",
    "test": "jest",
     "dev": "nodemon  src/index.ts",
     "start": "node dist/index.js",

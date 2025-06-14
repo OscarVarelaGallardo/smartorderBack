@@ -1,8 +1,8 @@
+// src/models/Category.ts
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db';
 
-
-export const Role = sequelize.define('Role', {
+export const Category = sequelize.define('Category', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -11,10 +11,10 @@ export const Role = sequelize.define('Role', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true, // evita que existan dos roles con el mismo nombre
+        unique: true,
     },
-
 }, {
-    tableName: 'roles',
-    timestamps: true,
+    tableName: 'categories',
+    timestamps: false,
 });
+

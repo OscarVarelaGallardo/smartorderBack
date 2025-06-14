@@ -26,16 +26,9 @@ export const User = sequelize.define('user',{
     
 )
 
-//
-//Relaction whith Role
-User.hasOne(Role, {
-    foreignKey: 'userId',       
-    as: 'role',                 
-    onDelete: 'CASCADE', 
-          
-});
 
-Role.belongsTo(User, {
-    foreignKey: 'userId',
-    as: 'user',
+User.belongsTo(Role, {
+    foreignKey: 'roleId',
+    as: 'role',
+
 });

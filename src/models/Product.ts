@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../config/db'; // Asegúrate de usar tu instancia correcta
+import { sequelize } from '../config/db';
+import { Category } from './Category';
 
 export const Product = sequelize.define('Product', {
     id: {
@@ -19,10 +20,6 @@ export const Product = sequelize.define('Product', {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
     },
-    category: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-    },
     available: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -36,7 +33,26 @@ export const Product = sequelize.define('Product', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    categoryId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'categories', // nombre de la tabla referida
+            key: 'id'
+        }
+    }
 }, {
-    tableName: 'products', // Nombre de la tabla en la base de datos
-    timestamps: false      // Desactiva createdAt / updatedAt
+    tableName: 'products',
+    timestamps: true
+});
+
+// Relaciones
+Product.belongsTo(Category, {
+    foreignKey: 'categoryId',
+    as: 'category',
+});
+
+Category.hasMany(Product, {
+    foreignKey: 'categoryId',
+    as: 'products',
 });

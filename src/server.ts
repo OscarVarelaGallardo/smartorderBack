@@ -6,6 +6,15 @@ import { sequelize } from "./config/db"
 import './models/Product'; 
 import './models/Order';
 import './models/OrderItem';
+import './models/User'
+import './models/Role'
+import './models/Shop'
+import './models/Payment'
+import './models/Category'
+import './models/Payment'
+import  './models/Cart'
+import  './models/Feedback'
+
 import cors from 'cors'
 
 const app = express()
@@ -32,7 +41,7 @@ app.use('/api', router);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force:true }).then(() => {
     console.log('Database is synchronized');
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
