@@ -37,13 +37,13 @@ export const Shop = sequelize.define('Shop', {
     timestamps: true,
 });
 
-// Un usuario puede tener una tienda
+
 User.hasOne(Shop, {
     foreignKey: 'userId',
     as: 'shop',
 });
 
-// Una tienda pertenece a un usuario
+
 Shop.belongsTo(User, {
     foreignKey: 'userId',
     as: 'owner',
