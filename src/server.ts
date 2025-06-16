@@ -14,6 +14,8 @@ import './models/Category'
 import './models/Payment'
 import  './models/Cart'
 import  './models/Feedback'
+import './models/Subscription'
+import './models/Plan'
 
 import cors from 'cors'
 
