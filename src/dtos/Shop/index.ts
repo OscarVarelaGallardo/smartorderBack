@@ -7,3 +7,8 @@ export const CreateShopSchema = z.object({
     longitude: z.number(),
     userId:z.number().optional()
 })
+
+
+export const GetShopByIdParamsSchema = z.object({
+    id: z.string().regex(/^\d+$/, "El id debe ser un número"),
+});
