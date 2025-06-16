@@ -16,9 +16,19 @@ export const User = sequelize.define('user',{
     password:{
         type:DataTypes.STRING,
         allowNull:false,
-        
-        
-    }},
+
+    },
+    isActive:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:true
+    },
+        roleId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 3
+        }
+    },
+
     {
         tableName:'users',
         timestamps:true
@@ -27,8 +37,3 @@ export const User = sequelize.define('user',{
 )
 
 
-User.belongsTo(Role, {
-    foreignKey: 'roleId',
-    as: 'role',
-
-});

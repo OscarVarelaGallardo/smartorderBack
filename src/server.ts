@@ -14,6 +14,8 @@ import './models/Category'
 import './models/Payment'
 import  './models/Cart'
 import  './models/Feedback'
+import './models/Subscription'
+import './models/Plan'
 
 import cors from 'cors'
 
@@ -41,7 +43,7 @@ app.use('/api', router);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.sync({ force:false }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
     console.log('Database is synchronized');
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
