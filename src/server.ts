@@ -25,8 +25,7 @@ import 'dotenv/config'
 app.use(cors({
     origin: (origin, callback) => {
         const allowedOrigins = [
-            'http://localhost:3000', // Web local (desarrollo)
-            'https://mi-frontend.vercel.app' // Web en producción (si tienes)
+            '*' 
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {
