@@ -2,7 +2,7 @@
   "name": "smartorder",
   "version": "1.0.0",
   "description": "node express ts ",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "seed:roles": "ts-node src/seeders/seedRoles.ts",
     "seed:plan": "ts-node src/seeders/seedPlan.ts",
