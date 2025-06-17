@@ -24,9 +24,13 @@ export const Shop = sequelize.define('Shop', {
         type: DataTypes.DECIMAL(10, 7), // Ej: -99.133209
         allowNull: false,
     },
+    isActive:{
+        type:DataTypes.BOOLEAN,
+        defaultValue: true
+    },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'users',
             key: 'id',
@@ -37,13 +41,13 @@ export const Shop = sequelize.define('Shop', {
     timestamps: true,
 });
 
-// Un usuario puede tener una tienda
+
 User.hasOne(Shop, {
     foreignKey: 'userId',
     as: 'shop',
 });
 
-// Una tienda pertenece a un usuario
+
 Shop.belongsTo(User, {
     foreignKey: 'userId',
     as: 'owner',
