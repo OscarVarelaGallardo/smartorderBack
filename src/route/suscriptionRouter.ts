@@ -10,13 +10,13 @@ import {
 } from '../controllers/suscriptionController';
 
 const router = Router();
-// Create a new subscription
+
 router.post('/', createSubscription);
-// Get all subscriptions
+
 router.get('/', getAllSubscriptions);
 
 router.get('/:id',  getSubscriptionById);
-// Update a subscription by ID
+
 router.patch('/:id', updateSubscription);
 
 router.delete('/:id', deleteSubscription);
