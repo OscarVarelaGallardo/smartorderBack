@@ -8,7 +8,7 @@ import { CreateProductSchema,
      GetProductByIdParams,
      UpdateProductDto,
      DeleteProductParams
-    } from '../dtos/ProductDTO';
+    } from '../dto/ProductDTO';
 import {Category} from "../models/Category";
 
 

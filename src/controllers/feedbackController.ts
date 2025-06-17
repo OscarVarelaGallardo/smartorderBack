@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { Feedback } from "../models/Feedback";
-import { FeedbackQuerySchema, FeedbackIdSchema, FeedbackUpdateQuerySchema } from "../dtos/FeedbackDTO";
+import { FeedbackQuerySchema, FeedbackIdSchema, FeedbackUpdateQuerySchema } from "../dto/FeedbackDTO";
 import { Product } from "../models/Product";
 import { User } from "../models/User";
 

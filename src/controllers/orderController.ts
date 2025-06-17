@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 import {
     GetAllOrderQuerySchema,
     CreateOrderSchema
-} from '../dtos/OrderDTO';
+} from '../dto/OrderDTO';
 import { OrderItem } from '../models/OrderItem';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';

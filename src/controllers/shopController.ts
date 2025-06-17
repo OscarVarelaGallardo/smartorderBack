@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {Shop} from "../models/Shop";
-import {CreateShopSchema, GetShopByIdParamsSchema} from "../dtos/Shop";
+import {CreateShopSchema, GetShopByIdParamsSchema} from "../dto/ShopDTO";
 import {User} from "../models/User";
 
 

@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import {User} from '../models/User';
 import {Shop} from "../models/Shop";
 import bcrypt from 'bcrypt';
-import {CreateUserSchema, GetUserByIdParamsSchema, UpdateUserSchema} from "../dtos/User";
+import {CreateUserSchema, GetUserByIdParamsSchema, UpdateUserSchema} from "../dto/UserDTO";
 
 export const createUser = async (req: Request, res: Response): Promise<any> => {
     const parseResult = CreateUserSchema.safeParse(req.body);
