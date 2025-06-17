@@ -15,7 +15,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
         const {email, password} = parseResult.data
         const existingUser = await User.findOne({where: {email}});
         if (existingUser) {
-            res.status(409).json({message: 'El usuario ya existe.'});
+            res.status(409).json({message: 'User already exists with this email.'});
             return;
         }
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,6 +31,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
         return
     }
 };
+
 export const getAllUser = async (req: Request, res: Response): Promise<any> => {
     try {
         const allUser = await User.findAll({
@@ -41,6 +42,7 @@ export const getAllUser = async (req: Request, res: Response): Promise<any> => {
         res.status(400).json(error)
     }
 }
+
 export const updateUser = async (req: Request, res: Response): Promise<any> => {
 
     const parseResult = GetUserByIdParamsSchema.safeParse(req.params);

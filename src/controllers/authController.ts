@@ -4,8 +4,10 @@ import { LoginSchema } from '../dto/LoginDTO'; // Ajusta la ruta si es diferente
 import { User } from '../models/User'; // Ajusta segúƒn cómo importes tu modelo
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
+
 
 export const login = async (req: Request, res: Response):Promise<any> => {
     const result = LoginSchema.safeParse(req.body);
@@ -27,7 +29,7 @@ export const login = async (req: Request, res: Response):Promise<any> => {
         // @ts-ignore
         const token =  jwt.sign(
             {  email: user.get('email')},
-            JWT_SECRET,
+            process.env.JWT_SECRET as string,
             { expiresIn: '2h' }
         );
 
