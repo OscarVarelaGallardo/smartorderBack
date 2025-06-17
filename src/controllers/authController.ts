@@ -1,7 +1,7 @@
 
 import {Response, Request} from "express";
 import { LoginSchema } from '../dto/LoginDTO'; // Ajusta la ruta si es diferente
-import { User } from '../models/User'; // Ajusta según cómo importes tu modelo
+import { User } from '../models/User'; // Ajusta segúƒn cómo importes tu modelo
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

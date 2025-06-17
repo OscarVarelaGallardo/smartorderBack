@@ -4,7 +4,7 @@ import orderRoutes from './route/orderRouter';
 import categoryRouter from "./route/categoryRouter";
 import feedbackRouter from "./route/feedbackRouter";
 
-
+import planRouter from "./route/planRouter";
 import shopRouter from './route/shopRouter'
 import userRouter from "./route/userRouter";
 import loginRouter from "./route/loginRouter";
@@ -16,7 +16,7 @@ const router = Router();
 router.use('/login', loginRouter)
 
 // Importar las rutas de productos
-// @ts-ignore
+
 router.use('/products',
     authToken,
     productRoutes);
@@ -40,7 +40,16 @@ router.use('/user',
     userRouter)
 
 // Importar las rutas de feedback
-router.use('/feedback', feedbackRouter)
+router.use('/feedback',
+    authToken,
+     feedbackRouter)
+
+router.use('/plan',
+    authToken,
+    planRouter);
+
+// Importar las rutas de login
+router.use('/login', loginRouter);
 
 // Ruta de prueba
 router.get('/', (req: Request, res: Response) => {
