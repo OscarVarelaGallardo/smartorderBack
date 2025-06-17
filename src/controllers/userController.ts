@@ -1,46 +1,64 @@
 import {Request, Response} from 'express';
 
-import {User} from '../models/User'; // ajusta la ruta si es necesario
+import {User} from '../models/User';
+import {Shop} from "../models/Shop";
 import bcrypt from 'bcrypt';
+import {CreateUserSchema, GetUserByIdParamsSchema, UpdateUserSchema} from "../dtos/User";
 
-export const createUser = async (req: Request, res: Response): Promise<void> => {
-    const {email, password} = req.body;
-
-    if (!email || !password) {
-        res.status(400).json({message: 'Email y contraseña son obligatorios.'});
-        return;
+export const createUser = async (req: Request, res: Response): Promise<any> => {
+    const parseResult = CreateUserSchema.safeParse(req.body);
+    if (!parseResult.success) {
+        res.status(400).json({errors: parseResult.error.errors});
+        return
     }
-
     try {
+        const {email, password} = parseResult.data
         const existingUser = await User.findOne({where: {email}});
         if (existingUser) {
             res.status(409).json({message: 'El usuario ya existe.'});
             return;
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await User.create({
+        await User.create({
             email,
             password: hashedPassword,
-            roleId: 2,
-        });
 
-        res.status(201).json({message: 'User created successfully', user: newUser});
+        });
+        res.status(201).json({message: 'User created successfully'});
+        return
     } catch (error) {
         res.status(500).json({message: 'Error on server  to created  user.', error});
         return
     }
 };
+export const getAllUser = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const allUser = await User.findAll({
+            where: {isActive: true}
+        })
+        res.status(200).json(allUser)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+export const updateUser = async (req: Request, res: Response): Promise<any> => {
 
-export const updateUser = async (req: Request, res: Response) => {
-    const {id} = req.params;
-    const {userUpdate} = req.body
-    if (!id) return res.status(400).json({message: 'Id is required.'})
+    const parseResult = GetUserByIdParamsSchema.safeParse(req.params);
+    const parseResultBody = UpdateUserSchema.safeParse(req.body);
+
+    if (!parseResult.success || !parseResultBody) {
+        res.status(400).json({errors: parseResult.error.errors});
+        return
+    }
+    const {id} = parseResult.data
+    const {email, password, isActive} = parseResultBody.data
+
     try {
         const user = await User.findByPk(id)
         if (user) {
-            await user.update(userUpdate)
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            await user.update({email, password: hashedPassword, isActive})
             return res.status(201).json({message: 'User update successfully'});
 
         } else {
@@ -54,17 +72,46 @@ export const updateUser = async (req: Request, res: Response) => {
 
 }
 
-export const deleteUser = async (req: Request, res: Response): Promise<any> => {
-    const {id} = req.params;
-    if (!id) {
-        return res.status(400).json({message: 'Id is required.'});
+export const getUserById = async (req: Request, res: Response): Promise<any> => {
+    const parseResult = GetUserByIdParamsSchema.safeParse(req.params);
+    if (!parseResult.success) {
+        res.status(400).json({errors: parseResult.error.errors});
+        return
     }
+    const {id} = parseResult.data;
+    try {
+        const user = await User.findAll({
+            where: {
+                id: id,
+                isActive: true
+            },
+            attributes: {exclude: ['password', 'createdAt', 'updatedAt', 'roleId', 'id']},
+            include: [{
+                model: Shop,
+                as: 'shop',
+                attributes: {exclude: ['createdAt', 'updatedAt', 'userId', 'id']}
+            }]
+        })
+        res.status(200).json(user)
+        return
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json(error)
+    }
+}
+
+export const deleteUser = async (req: Request, res: Response): Promise<any> => {
+    const parseResult = GetUserByIdParamsSchema.safeParse(req.params);
+    if (!parseResult.success) {
+        res.status(400).json({errors: parseResult.error.errors});
+        return
+    }
+    const {id} = parseResult.data;
 
     try {
         const user = await User.findByPk(id)
-        const isActive = false
         if (user) {
-            user.set('isActive', isActive)
+            user.set('isActive', false)
             user.save()
             res.status(201).json({message: 'User deleted successfully'});
             return
