@@ -32,7 +32,7 @@ export const createCategory = async (req: Request, res: Response): Promise<any> 
             return res.status(409).json({message: "Category name already exists"});
         }
 
-        const newCategory = await Category.create({name});
+        await Category.create({name});
         return res.status(201).json({
             message: "Category created successfully",
 
