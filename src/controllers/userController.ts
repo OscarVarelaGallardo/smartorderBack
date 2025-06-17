@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 
-import {User} from '../models/User'; // ajusta la ruta si es necesario
+import {User} from '../models/User';
+import {Shop} from "../models/Shop";
 import bcrypt from 'bcrypt';
 import {CreateUserSchema, GetUserByIdParamsSchema, UpdateUserSchema} from "../dtos/User";
 
@@ -48,7 +49,7 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
         if (user) {
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            await user.update({email, password:hashedPassword,isActive})
+            await user.update({email, password: hashedPassword, isActive})
             return res.status(201).json({message: 'User update successfully'});
 
         } else {
@@ -63,20 +64,45 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
 }
 
 export const getUserById = async (req: Request, res: Response): Promise<any> => {
-
+    const parseResult = GetUserByIdParamsSchema.safeParse(req.params);
+    if (!parseResult.success) {
+        res.status(400).json({errors: parseResult.error.errors});
+        return
+    }
+    const {id} = parseResult.data;
+    try {
+        const user = await User.findAll({
+            where: {
+                id: id,
+                isActive: true
+            },
+            attributes: {exclude: ['password', 'createdAt', 'updatedAt', 'roleId', 'id']},
+            include: [{
+                model: Shop,
+                as: 'shop',
+                attributes: {exclude: ['createdAt', 'updatedAt', 'userId','id']}
+            }]
+        })
+        res.status(200).json(user)
+        return
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json(error)
+    }
 }
 
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
-    const {id} = req.params;
-    if (!id) {
-        return res.status(400).json({message: 'Id is required.'});
+    const parseResult = GetUserByIdParamsSchema.safeParse(req.params);
+    if (!parseResult.success) {
+        res.status(400).json({errors: parseResult.error.errors});
+        return
     }
+    const {id} = parseResult.data;
 
     try {
         const user = await User.findByPk(id)
-        const isActive = false
         if (user) {
-            user.set('isActive', isActive)
+            user.set('isActive', false)
             user.save()
             res.status(201).json({message: 'User deleted successfully'});
             return
