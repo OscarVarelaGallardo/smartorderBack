@@ -2,10 +2,14 @@ import { Router, Request, Response, } from 'express';
 import productRoutes from './route/productRouter';
 import orderRoutes from './route/orderRouter';
 import categoryRouter from "./route/categoryRouter";
+import feedbackRouter from "./route/feedbackRouter";
+
+
 import shopRouter from './route/shopRouter'
 import userRouter from "./route/userRouter";
 import loginRouter from "./route/loginRouter";
 import authToken from "./middleware/authMiddleware";
+
 
 const router = Router();
 
@@ -35,10 +39,15 @@ router.use('/user',
     authToken,
     userRouter)
 
+// Importar las rutas de feedback
+router.use('/feedback', feedbackRouter)
+
 // Ruta de prueba
 router.get('/', (req: Request, res: Response) => {
     res.json({message: 'API is running'});
 });
+
+
 
 
 export default router;
