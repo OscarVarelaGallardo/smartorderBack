@@ -7,6 +7,7 @@ import userRouter from "./route/userRouter";
 
 const router = Router();
 
+
 // Importar las rutas de productos
 router.use('/products', productRoutes);
 

@@ -31,7 +31,16 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
         return
     }
 };
-
+export const getAllUser = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const allUser = await User.findAll({
+            where: {isActive: true}
+        })
+        res.status(200).json(allUser)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
 export const updateUser = async (req: Request, res: Response): Promise<any> => {
 
     const parseResult = GetUserByIdParamsSchema.safeParse(req.params);
@@ -80,7 +89,7 @@ export const getUserById = async (req: Request, res: Response): Promise<any> => 
             include: [{
                 model: Shop,
                 as: 'shop',
-                attributes: {exclude: ['createdAt', 'updatedAt', 'userId','id']}
+                attributes: {exclude: ['createdAt', 'updatedAt', 'userId', 'id']}
             }]
         })
         res.status(200).json(user)
