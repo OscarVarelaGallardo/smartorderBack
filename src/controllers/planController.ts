@@ -22,6 +22,7 @@ export const createPlan = async (req: Request, res: Response): Promise<any> => {
         return res.status(500).json({ message: 'Error creating plan', error });
     }
 }
+
 export const getAllPlans = async (req: Request, res: Response): Promise<any> => {
     try {
         const plans = await Plan.findAll();
@@ -31,6 +32,7 @@ export const getAllPlans = async (req: Request, res: Response): Promise<any> => 
         return res.status(500).json({ message: 'Error fetching plans', error });
     }
 }
+
 export const getPlanById = async (req: Request, res: Response): Promise<any> => {
     const parseResult = GetPlanByIdParamsSchema.safeParse(req.params);
     if (!parseResult.success) {
@@ -40,13 +42,7 @@ export const getPlanById = async (req: Request, res: Response): Promise<any> => 
     const { id } = parseResult.data;
 
     try {
-        const plan = await Plan.findByPk(id, {
-            include: [{
-                model: User,
-                as: 'user',
-                attributes: ['id', 'email'] // Adjust attributes as needed
-            }]
-        });
+        const plan = await Plan.findByPk(id);
 
         if (!plan) {
             return res.status(404).json({ message: 'Plan not found' });
@@ -56,5 +52,28 @@ export const getPlanById = async (req: Request, res: Response): Promise<any> => 
     } catch (error) {
         console.error('Error fetching plan by ID:', error);
         return res.status(500).json({ message: 'Error fetching plan', error });
+    }
+}
+
+export const deletePlan = async (req: Request, res: Response): Promise<any> => {
+    const parseResult = GetPlanByIdParamsSchema.safeParse(req.params);
+    if (!parseResult.success) {
+        return res.status(400).json({ errors: parseResult.error.errors });
+    }
+
+    const { id } = parseResult.data;
+
+    try {
+        const plan = await Plan.findByPk(id);
+
+        if (!plan) {
+            return res.status(404).json({ message: 'Plan not found' });
+        }
+
+        await plan.destroy();
+        return res.status(200).json({ message: 'Plan deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting plan:', error);
+        return res.status(500).json({ message: 'Error deleting plan', error });
     }
 }
