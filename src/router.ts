@@ -36,7 +36,6 @@ router.use('/shop',
     shopRouter)
 
 router.use('/user',
-    authToken,
     userRouter)
 
 // Importar las rutas de feedback

@@ -5,14 +5,15 @@ import {
     deleteUser, updateUser,
     getAllUser
 } from '../controllers/userController'
+import authToken from "../middleware/authMiddleware";
 
 const router = Router();
 
 router.post('/', createUser)
-router.get('/:id', getUserById)
-router.get('/', getAllUser)
-router.delete('/:id', deleteUser)
-router.patch('/:id', updateUser)
+router.get('/:id', authToken, getUserById)
+router.get('/', authToken, getAllUser)
+router.delete('/:id', authToken, deleteUser)
+router.patch('/:id', authToken, updateUser)
 
 
 
