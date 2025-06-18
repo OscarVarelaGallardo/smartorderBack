@@ -28,8 +28,8 @@ export const login = async (req: Request, res: Response):Promise<any> => {
 
         // @ts-ignore
         const token =  jwt.sign(
-            {  email: user.get('email')},
-            {id: user.get('id')},
+            { email: user.get('email'), id: user.get('id') },
+           
             process.env.JWT_SECRET as string,
             { expiresIn: '2h' }
         );
